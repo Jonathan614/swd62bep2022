@@ -29,7 +29,7 @@ namespace DataAccess.Repositories
         public void DeleteItem(Item i)
         {
             context.Items.Remove(i);
-
+            context.SaveChanges();
         }
 
         public Item GetItem(int id)
@@ -39,7 +39,7 @@ namespace DataAccess.Repositories
             return null; }
 
         public IQueryable<Item> GetItems() //IQueryable vs List: to explain
-        { return null; }
+        { return new List<Item>().AsQueryable(); }
 
         public void Update(Item originalItem, Item newItem)
         { }

@@ -27,5 +27,7 @@ namespace Domain.Models
 
         public int Stock { get; set; }
         public string ImagePath { get; set; }
+
+        //public string Supplier { get; set; }
     }
 }
