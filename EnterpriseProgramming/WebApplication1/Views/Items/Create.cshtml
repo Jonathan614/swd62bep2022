@@ -6,7 +6,21 @@
 
 <h1>Create</h1>
 
-<h4>CreateItemViewModel</h4>
+@if (string.IsNullOrEmpty(ViewBag.Message) == false)
+{
+    <div class="alert alert-primary" role="alert">
+        @ViewBag.Message
+    </div>
+}
+
+
+@if (string.IsNullOrEmpty(ViewBag.Error) == false)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+
 <hr />
 <div class="row">
     <div class="col-md-4">

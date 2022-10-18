@@ -1,4 +1,6 @@
+using BusinessLogic.Services;
 using DataAccess.Context;
+using DataAccess.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +39,25 @@ namespace WebApplication1
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            /*
+             * 
+             * Singleton: IoC container will create and share a single instance of a service 
+             * throughout the application's lifetime.
+             * e.g 50 concurrent users making 5 ItemsRepository calls, that means that only 1 instance of ItemsRepository is created for everyone
+             * 
+             * 
+               Transient: The IoC container will create a new instance of the specified service type every time you ask for it.
+            e.g. 50 concurrent users making 3 ItemsRepository calls, that means 50 x 3= 150 instances in memory
+
+               Scoped: IoC container will create an instance of the specified service type once per request and will be shared in a single request.
+              e.g. 50 concurrent users making 3 ItemsRepository calls, that means 50 x 1= 50 instances in memory
+
+             * 
+             */
+
+            services.AddScoped<ItemsRepository>();
+            services.AddScoped<ItemsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

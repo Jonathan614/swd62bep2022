@@ -39,7 +39,9 @@ namespace DataAccess.Repositories
             return null; }
 
         public IQueryable<Item> GetItems() //IQueryable vs List: to explain
-        { return new List<Item>().AsQueryable(); }
+        {
+            return context.Items;
+        }
 
         public void Update(Item originalItem, Item newItem)
         { }

@@ -1,4 +1,5 @@
-﻿using BusinessLogic.ViewModels;
+﻿using BusinessLogic.Services;
+using BusinessLogic.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,19 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Controllers
 {
+
+    //Design Patterns - Creational, Behavioural, Structural
+    //Dependency Injection - it is about centralizing and therefore better management of the (creation of) instances
+    //1 variation is Constructor Injection
+
     public class ItemsController : Controller
     {
+        private ItemsService itemsService { get; set; }
+        public ItemsController (ItemsService _itemsService)
+        {
+            itemsService = _itemsService;
+        }
+
         [HttpGet]
         public IActionResult Create()
         {   
@@ -26,8 +38,8 @@ namespace WebApplication1.Controllers
                 //1. implement the create method by
                 //2. applying dependency injection and ask for ItemsService
                 //3. itemsService.AddNewItem(......)
-
-
+                itemsService.AddNewItem(data.Name, data.Price, data.CategoryId, data.Stock, data.ImagePath);
+                 
 
                 ViewBag.Message = "Item added successfully";
             }
@@ -37,8 +49,15 @@ namespace WebApplication1.Controllers
                 //log the exception
                 ViewBag.Error = "There was a problem adding a new item. make sure all the fields are correctly filled";
             }
-
             return View();
         }
+
+        public IActionResult List()
+        {
+         var list = itemsService.ListItems();
+            return View(list); //connection to the database is opened only here 
+            //to render the text black on white on the page
+        }
+       
     }
 }
