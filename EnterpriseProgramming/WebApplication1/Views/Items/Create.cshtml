@@ -6,20 +6,7 @@
 
 <h1>Create</h1>
 
-@if (string.IsNullOrEmpty(ViewBag.Message) == false)
-{
-    <div class="alert alert-primary" role="alert">
-        @ViewBag.Message
-    </div>
-}
 
-
-@if (string.IsNullOrEmpty(ViewBag.Error) == false)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewBag.Error
-    </div>
-}
 
 <hr />
 <div class="row">
@@ -59,7 +46,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="List">Back to List</a>
 </div>
 
 @section Scripts {

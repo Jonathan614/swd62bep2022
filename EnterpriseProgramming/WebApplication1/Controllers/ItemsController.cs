@@ -58,6 +58,32 @@ namespace WebApplication1.Controllers
             return View(list); //connection to the database is opened only here 
             //to render the text black on white on the page
         }
+
+        public IActionResult Details(int id)
+        {
+            var myFoundItem = itemsService.GetItem(id);
+            if (myFoundItem == null)
+            {
+                //redirecting the user to the List action/view
+                //solution 1:
+                ViewBag.Error = "Item was not found"; //ViewBag doesn't survive redirections
+                var list = itemsService.ListItems();
+                return View("List", list);
+
+                //solution 2:
+                //return RedirectToAction("List");
+
+            }
+            else
+                return View(myFoundItem); //this will automatically redirect the user to a View called "Details"
+        }
+
+        public IActionResult Search(string keyword)  
+        {
+            var list = itemsService.Search(keyword);
+            return View("List", list); //to locate a page/view bearing the same name of the action
+
+        }
        
     }
 }

@@ -32,11 +32,7 @@ namespace DataAccess.Repositories
             context.SaveChanges();
         }
 
-        public Item GetItem(int id)
-        {
        
-
-            return null; }
 
         public IQueryable<Item> GetItems() //IQueryable vs List: to explain
         {
