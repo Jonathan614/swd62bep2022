@@ -7,6 +7,7 @@ using BusinessLogic.ViewModels;
 
 namespace BusinessLogic.Services
 {
+    public enum SortCriterion {Name, Price };
     public class ItemsService
     {
         //the centralization of creation of instances implies a more efficient management of objects
@@ -79,8 +80,42 @@ namespace BusinessLogic.Services
             //2...Where (1st filtering) //it amends the prepared statement in memory
             //3...Where (2nd filtering) //it further amends the prepared statement in memory
 
+
+
             return Search(name).
                 Where(x => x.Price >= minPrice && x.Price <= maxPrice);
+        }
+
+        public IQueryable<ItemViewModel> SearchSortByPrice(string name, double minPrice, double maxPrice,bool ascending)
+        {
+
+            //1...GetItems //prepares the statement in memory
+            //2...Where (1st filtering) //it amends the prepared statement in memory
+            //3...Where (2nd filtering) //it further amends the prepared statement in memory
+            //4....Sort //it further amends the prepared filtered statement with a sort and stores the statement in memory
+            // until a) either it encounters ToList or b) the moment you pass the resulting object to a View
+
+
+            return ascending ? Search(name, minPrice, maxPrice).OrderBy(x => x.Price) :
+                Search(name, minPrice, maxPrice).OrderByDescending(x => x.Price);
+        }
+
+        public IQueryable<ItemViewModel> Sort(IQueryable<ItemViewModel> myItems, SortCriterion sort, bool ascending)
+        {
+            switch(sort)
+            {
+                case SortCriterion.Name:
+                    break;
+
+                case SortCriterion.Price:
+                    return ascending ? myItems.OrderBy(x => x.Price) :
+                          myItems.OrderByDescending(x => x.Price);
+                    break;
+
+                
+            }
+            return myItems;
+   
         }
        
     }

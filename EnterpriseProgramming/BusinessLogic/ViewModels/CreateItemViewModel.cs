@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BusinessLogic.ViewModels
@@ -12,6 +13,8 @@ namespace BusinessLogic.ViewModels
 
         public int Stock { get; set; }
         public string ImagePath { get; set; }
+
+        public IQueryable<CategoryViewModel> Categories { get; set; }
 
     }
 }
