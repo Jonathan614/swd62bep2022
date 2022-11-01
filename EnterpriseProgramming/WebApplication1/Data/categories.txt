@@ -1,0 +1,5 @@
+1;Mobiles
+2;Peripherals
+3;Consumables
+4;Printers
+5;Smart Devices

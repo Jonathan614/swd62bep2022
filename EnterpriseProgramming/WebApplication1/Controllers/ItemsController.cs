@@ -66,6 +66,7 @@ namespace WebApplication1.Controllers
                     string uniqueFilename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
                     //3. identify a place (in the wwwroot > Images) where to store the actual physical file
+                    //hostService enables you to get the full path where to store the image on the web server
                     string absolutePath = hostService.WebRootPath + @"\Images\" + uniqueFilename;
 
                     //4. save the actual file

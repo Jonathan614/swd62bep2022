@@ -1,6 +1,7 @@
 using BusinessLogic.Services;
 using DataAccess.Context;
 using DataAccess.Repositories;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data;
@@ -58,9 +60,19 @@ namespace WebApplication1
 
             services.AddScoped<ItemsRepository>();
             services.AddScoped<ItemsService>();
+ 
+            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            
+        // services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(provider => new CategoriesFileRepository((@"C:\Users\attar\source\repos\swd62bep2022\EnterpriseProgramming\WebApplication1\Data\categories.txt")));
+         
 
-            services.AddScoped<CategoriesRepository>();
+            
+
+           
+
             services.AddScoped<CategoriesService>();
+
+ 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
