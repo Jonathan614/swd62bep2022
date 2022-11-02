@@ -40,6 +40,14 @@ namespace DataAccess.Repositories
         }
 
         public void Update(Item originalItem, Item newItem)
-        { }
+        {
+            originalItem.CategoryId = newItem.CategoryId;
+            originalItem.ImagePath = newItem.ImagePath;
+            originalItem.Name = newItem.Name;
+            originalItem.Price = newItem.Price;
+            originalItem.Stock = newItem.Stock;
+
+            context.SaveChanges();
+        }
     }
 }

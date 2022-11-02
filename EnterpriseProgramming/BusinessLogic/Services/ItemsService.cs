@@ -20,6 +20,12 @@ namespace BusinessLogic.Services
             itemsRepository = _itemRepository;
         }
 
+        public void DeleteItem(int id)
+        {
+            var item = itemsRepository.GetItems().SingleOrDefault(x=>x.Id ==id);
+            if (item != null)
+                itemsRepository.DeleteItem(item);
+        }
 
         public void AddNewItem(string name, double price, int categoryId, int stock=0, string imagePath=null)
         {
@@ -58,6 +64,7 @@ namespace BusinessLogic.Services
                            Price = i.Price,
                            Stock = i.Stock,
                            Category = i.Category.Title
+                           , CategoryId=i.CategoryId
                        };
             return list;
         }
@@ -116,6 +123,21 @@ namespace BusinessLogic.Services
             }
             return myItems;
    
+        }
+
+        public void UpdateItem(int id, string name, double price, int categoryId, int stock = 0, string imagePath = null)
+        {
+            var item = itemsRepository.GetItems().SingleOrDefault(x => x.Id == id);
+            if (item != null)
+                itemsRepository.Update(item, new Domain.Models.Item()
+                {
+                    CategoryId = categoryId,
+                    Id = id,
+                    Name = name,
+                    Price = price,
+                    ImagePath = imagePath,
+                    Stock = stock
+                });
         }
        
     }

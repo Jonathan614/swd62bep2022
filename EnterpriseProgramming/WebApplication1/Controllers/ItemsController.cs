@@ -145,6 +145,83 @@ namespace WebApplication1.Controllers
             return View("List", list); //to locate a page/view bearing the same name of the action
 
         }
+
        
+
+        public IActionResult Delete(int id)
+        {
+            itemsService.DeleteItem(id);
+            return RedirectToAction("List");
+        }
+
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+           var item = itemsService.GetItem(id);
+            
+            CreateItemViewModel myModel = new CreateItemViewModel();
+            myModel.CategoryId = item.CategoryId;
+            myModel.ImagePath = item.ImagePath;
+            myModel.Name = item.Name;
+            myModel.Price = item.Price;
+            myModel.Stock = item.Stock;
+         
+
+            if(item != null)
+            {
+                myModel.Categories = categoriesService.GetCategories();
+                return View(myModel);
+            }
+            else
+            {
+                return RedirectToAction("List");
+            }
+            
+        }
+
+        [HttpPost] //this method will be triggered after a Submit button inside a form is clicked
+        public IActionResult Edit(int id, CreateItemViewModel data, IFormFile file)
+        {
+           //to do the comments
+            try
+            {
+                if (file != null)
+                {
+                    //we get the old path and delete the old image
+
+                    string uniqueFilename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string absolutePath = hostService.WebRootPath + @"\Images\" + uniqueFilename;
+                    using (var stream = System.IO.File.Create(absolutePath)) //this will create an empty stream at location : absolutePath
+                    {
+                        file.CopyTo(stream); 
+                    } 
+                    data.ImagePath = "/Images/" + uniqueFilename; //the first / indicates asp.net to start locating the image from the root folder
+                }
+                else
+                {
+                    //set the original image path if nothing is uploaded
+                }
+                 
+                
+                itemsService.UpdateItem(id,data.Name, data.Price, data.CategoryId, data.Stock, data.ImagePath);
+
+                ViewBag.Message = "Item updated successfully";
+            }
+            catch (Exception ex)
+            {
+                //ViewBag : a dynamic object, it allows you to declare properties on the fly
+                //log the exception
+                ViewBag.Error = "There was a problem updating item. make sure all the fields are correctly filled";
+            }
+
+            
+            var categories = categoriesService.GetCategories();
+            CreateItemViewModel myModel = new CreateItemViewModel();
+            myModel.Categories = categories;
+
+            return View("Edit", myModel);
+        }
+
     }
 }
