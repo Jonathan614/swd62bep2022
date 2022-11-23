@@ -1,8 +1,3 @@
-using BusinessLogic.Services;
-using DataAccess.Context;
-using DataAccess.Repositories;
-using Domain.Interfaces;
-using Domain.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,12 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Data;
+using WebApplication2.Data;
 
-namespace WebApplication1
+namespace WebApplication2
 {
     public class Startup
     {
@@ -33,47 +27,13 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ShoppingCartContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddDefaultIdentity<CustomUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ShoppingCartContext>();
-
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
-
-            /*
-             * 
-             * Singleton: IoC container will create and share a single instance of a service 
-             * throughout the application's lifetime.
-             * e.g 50 concurrent users making 5 ItemsRepository calls, that means that only 1 instance of ItemsRepository is created for everyone
-             * 
-             * 
-               Transient: The IoC container will create a new instance of the specified service type every time you ask for it.
-            e.g. 50 concurrent users making 3 ItemsRepository calls, that means 50 x 3= 150 instances in memory
-
-               Scoped: IoC container will create an instance of the specified service type once per request and will be shared in a single request.
-              e.g. 50 concurrent users making 3 ItemsRepository calls, that means 50 x 1= 50 instances in memory
-
-             * 
-             */
-
-            services.AddScoped<ItemsRepository>();
-            services.AddScoped<ItemsService>();
- 
-            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
-            
-        // services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(provider => new CategoriesFileRepository((@"C:\Users\attar\source\repos\swd62bep2022\EnterpriseProgramming\WebApplication1\Data\categories.txt")));
-         
-
-            
-
-           
-
-            services.AddScoped<CategoriesService>();
-
- 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

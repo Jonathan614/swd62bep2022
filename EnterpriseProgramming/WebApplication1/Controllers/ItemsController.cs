@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Services;
 using BusinessLogic.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet] //Get method is called to load the page with blank controls
+        [Authorize]
         public IActionResult Create()
         {
             //do we need to process anything here the first time the user requests the create-an-item page?
@@ -50,12 +52,15 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost] //Post method is called after the end user fills in the data and presses Submit button
+        [Authorize]
         public IActionResult Create(CreateItemViewModel data, IFormFile file)
         {
             //......
             try
             {
                 //----------------Image upload------------------------------
+
+                string username = User.Identity.Name; //that gives you the username (email) of the currently logged in user
 
 
                 //1. to check whether image has been received successfully 

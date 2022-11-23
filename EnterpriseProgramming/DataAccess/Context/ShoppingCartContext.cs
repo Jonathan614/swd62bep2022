@@ -8,7 +8,7 @@ using System.Text;
 namespace DataAccess.Context
 {
     //this will represent the database - it is an abstraction
-    public class ShoppingCartContext : IdentityDbContext
+    public class ShoppingCartContext : IdentityDbContext<CustomUser>
     {
         public ShoppingCartContext(DbContextOptions<ShoppingCartContext> options)
           : base(options)
