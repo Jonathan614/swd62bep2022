@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.ActionFilters;
 
 namespace WebApplication1.Controllers
 {
@@ -58,6 +59,7 @@ namespace WebApplication1.Controllers
             //......
             try
             {
+
                 //----------------Image upload------------------------------
 
                 string username = User.Identity.Name; //that gives you the username (email) of the currently logged in user
@@ -152,7 +154,8 @@ namespace WebApplication1.Controllers
         }
 
        
-
+        //allow only deletion of items with stock == 0 and the user is ryanattard@gmail.com
+        [StockValidation]
         public IActionResult Delete(int id)
         {
             itemsService.DeleteItem(id);
