@@ -22,9 +22,11 @@ namespace WebApplication1.Controllers
     {
         private ItemsService itemsService;
         private CategoriesService categoriesService;
+        private LogsService  logService;
         private IWebHostEnvironment hostService;
-        public ItemsController (ItemsService _itemsService, CategoriesService _categoriesService, IWebHostEnvironment _host)
+        public ItemsController (ItemsService _itemsService, CategoriesService _categoriesService, LogsService _logService, IWebHostEnvironment _host)
         {
+            logService = _logService;
             itemsService = _itemsService;
             categoriesService = _categoriesService;
             hostService = _host;
@@ -56,62 +58,82 @@ namespace WebApplication1.Controllers
         [Authorize]
         public IActionResult Create(CreateItemViewModel data, IFormFile file)
         {
-            //......
-            try
+            string username = User.Identity.Name; //that gives you the username (email) of the currently logged in user
+
+            logService.LogMessage($"{username} is trying to create a new item with name {data.Name}", "info");
+            if (ModelState.IsValid) //we are making sure that the validators are fired
             {
-
-                //----------------Image upload------------------------------
-
-                string username = User.Identity.Name; //that gives you the username (email) of the currently logged in user
-
-
-                //1. to check whether image has been received successfully 
-                if (file != null)
+                logService.LogMessage($"Item with {data.Name} had correct inputs", "info");
+                string uniqueFilename ="";
+                //......
+                try
                 {
+                    //----------------Image upload------------------------------
 
-                    //2. generate a unique filename for the image
-                    string uniqueFilename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
-                    //3. identify a place (in the wwwroot > Images) where to store the actual physical file
-                    //hostService enables you to get the full path where to store the image on the web server
-                    string absolutePath = hostService.WebRootPath + @"\Images\" + uniqueFilename;
 
-                    //4. save the actual file
-                    using (var stream = System.IO.File.Create(absolutePath)) //this will create an empty stream at location : absolutePath
+
+                    //1. to check whether image has been received successfully 
+                    if (file != null)
+                    { logService.LogMessage($"Item with {data.Name} has a file", "info");
+
+                        //2. generate a unique filename for the image
+                        uniqueFilename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        logService.LogMessage($"Item with {data.Name} now has id: {uniqueFilename}", "info");
+                        //3. identify a place (in the wwwroot > Images) where to store the actual physical file
+                        //hostService enables you to get the full path where to store the image on the web server
+                        string absolutePath = hostService.WebRootPath + @"\Images\" + uniqueFilename;
+                        logService.LogMessage($"Item with {data.Name} and id: {uniqueFilename} will be stored at {absolutePath}", "info");
+                        //4. save the actual file
+                        using (var stream = System.IO.File.Create(absolutePath)) //this will create an empty stream at location : absolutePath
+                        {
+                            logService.LogMessage($"Item with {data.Name} and id: {uniqueFilename} is saving the file", "info");
+
+                            file.CopyTo(stream); //this will copy the data from the uploaded file (parameter) into  empty stream at absolute Path
+                        } //will close all streams
+                        logService.LogMessage($"Item with {data.Name} and id: {uniqueFilename} has file saved successfully", "info");
+                        //5. form the ImagePath and store assign it in the model above
+
+                        data.ImagePath = "/Images/" + uniqueFilename; //the first / indicates asp.net to start locating the image from the root folder
+
+                    }
+                    else
                     {
-                          file.CopyTo(stream); //this will copy the data from the uploaded file (parameter) into  empty stream at absolute Path
-                    } //will close all streams
+                        logService.LogMessage($"Item with {data.Name} did not have a file", "info");
+                    }
 
-                    //5. form the ImagePath and store assign it in the model above
+                    //-------------------------------------------------
 
-                    data.ImagePath = "/Images/" + uniqueFilename; //the first / indicates asp.net to start locating the image from the root folder
+                    //1. implement the create method by
+                    //2. applying dependency injection and ask for ItemsService
+                    //3. itemsService.AddNewItem(......)
+                    itemsService.AddNewItem(data.Name, data.Price, data.CategoryId, data.Stock, data.ImagePath);
+                    logService.LogMessage($"Item with {data.Name} and id: {uniqueFilename} is saved in db", "info");
 
+                    //ViewBag doesn't survive redirections
+                    //  TempData["Message"] = "Item added successfully";
+
+                    //ViewBag vs Tempdata
+                    //ViewBag doesnt survive redirections
+                    //Tempdata survives one redirection
+
+                    ViewBag.Message = "Item added successfully";
                 }
-
-                //-------------------------------------------------
-
-                //1. implement the create method by
-                //2. applying dependency injection and ask for ItemsService
-                //3. itemsService.AddNewItem(......)
-                itemsService.AddNewItem(data.Name, data.Price, data.CategoryId, data.Stock, data.ImagePath);
-
-
-                //ViewBag doesn't survive redirections
-              //  TempData["Message"] = "Item added successfully";
-
-                //ViewBag vs Tempdata
-                //ViewBag doesnt survive redirections
-                //Tempdata survives one redirection
-
-                ViewBag.Message = "Item added successfully";
+                catch (Exception ex) //innerException
+                {
+                    if (ex.InnerException != null)
+                    {
+                        logService.LogMessage($"Item with {data.Name} and id: {uniqueFilename} had an inner error. Error: {ex.InnerException.Message}", "error");
+                    }
+                    logService.LogMessage($"Item with {data.Name} and id: {uniqueFilename} had an error. Error: {ex.GetType().ToString()} {ex.Message}", "error");
+                    //ViewBag : a dynamic object, it allows you to declare properties on the fly
+                    //log the exception
+                    ViewBag.Error = "There was a problem adding a new item. make sure all the fields are correctly filled";
+                }
             }
-            catch (Exception ex)
-            {
-                //ViewBag : a dynamic object, it allows you to declare properties on the fly
-                //log the exception
-                ViewBag.Error = "There was a problem adding a new item. make sure all the fields are correctly filled";
+            else {
+                logService.LogMessage($"Item with {data.Name} may have some incorrect inputs - Price:{data.Price} | Stock: {data.Stock} | Category: {data.CategoryId}", "warning");
             }
-
             // return RedirectToAction("Create");
             var categories = categoriesService.GetCategories();
             CreateItemViewModel myModel = new CreateItemViewModel();

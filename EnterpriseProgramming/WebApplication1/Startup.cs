@@ -17,13 +17,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Data;
+ 
 
 namespace WebApplication1
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment host)
         {
             Configuration = configuration;
         }
@@ -63,12 +63,16 @@ namespace WebApplication1
             services.AddScoped<ItemsService>();
  
             services.AddScoped<ICategoriesRepository, CategoriesRepository>();
-            
-        // services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(provider => new CategoriesFileRepository((@"C:\Users\attar\source\repos\swd62bep2022\EnterpriseProgramming\WebApplication1\Data\categories.txt")));
-         
 
-            
 
+            // services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(provider => new CategoriesFileRepository((@"C:\Users\attar\source\repos\swd62bep2022\EnterpriseProgramming\WebApplication1\Data\categories.txt")));
+
+
+            services.AddScoped<ILogRepository, LogViaFileRepository>(provider =>
+            new LogViaFileRepository(@"C:\Users\attar\source\repos\SWD62b2022EPv3\EnterpriseProgramming\WebApplication1\Data\log.json")
+            );
+
+            services.AddScoped<LogsService>();
            
 
             services.AddScoped<CategoriesService>();
@@ -86,7 +90,10 @@ namespace WebApplication1
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+            app.UseDeveloperExceptionPage();
+               app.UseDatabaseErrorPage();
+
+              // app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

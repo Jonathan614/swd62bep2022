@@ -1,0 +1,12 @@
+{"Message":"ryanattard@gmail.com is trying to create a new item with name dfasdfasdfasdf","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf had correct inputs","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf has a file","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf now has id: 8752e902-511c-42b6-afda-15904b72667d.jpg","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf and id: 8752e902-511c-42b6-afda-15904b72667d.jpg will be stored at C:\\Users\\attar\\Source\\Repos\\SWD62b2022EPv3\\EnterpriseProgramming\\WebApplication1\\wwwroot\\Images\\8752e902-511c-42b6-afda-15904b72667d.jpg","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf and id: 8752e902-511c-42b6-afda-15904b72667d.jpg is saving the file","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf and id: 8752e902-511c-42b6-afda-15904b72667d.jpg has file saved successfully","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf and id: 8752e902-511c-42b6-afda-15904b72667d.jpg is saved in db","Date":"20/12/2022 15:21","Type":"info"}
+{"Message":"ryanattard@gmail.com is trying to create a new item with name dfasdfasdfasdf","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf had correct inputs","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf did not have a file","Date":"20/12/2022 15:20","Type":"info"}
+{"Message":"Item with dfasdfasdfasdf and id:  had an error. Error: System.Exception Item with the same already exists","Date":"20/12/2022 15:20","Type":"error"}
